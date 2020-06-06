@@ -28,7 +28,7 @@ db.once("open", async () => {
         userToCrawl[profileDataKeys[i]] = basicProfileData[profileDataKeys[i]];
       }
       await User.updateOne({ _id: userToCrawl._id }, userToCrawl);
-      await page.waitFor(3000);
+      await page.waitFor(10000);
     }
   };
   await main();

@@ -11,7 +11,19 @@ export const getBasicProfileData = async (username, page) => {
       "body > pre"
     );
   } catch {
-    return await { isError: true };
+    const tooMuchRequestErr = await page.evaluate((selector) => {
+      return document.querySelector(selector).innerText;
+    }, "body > div > div.page > div > div > p");
+
+    if (
+      tooMuchRequestErr === "Please wait a few minutes before you try again."
+    ) {
+      console.log("BEKLIYOM...");
+      await page.waitFor(600000);
+      await getBasicProfileData(username, page);
+    } else {
+      return { isError: true };
+    }
   }
 
   const parsedJson = JSON.parse(jsonStr);
